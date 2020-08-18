@@ -36,7 +36,7 @@ app.put("/repositories/:id", (request, response) => {
 
   const updatedRepository = repository = {
     ...repository,
-    title: title.length && title || repository.title,
+    title: title && title.length ? title : repository.title,
     url: url || repository.url,
     techs: techs || repository.techs,
   };
@@ -48,7 +48,7 @@ app.put("/repositories/:id", (request, response) => {
 
 app.delete("/repositories/:id", (request, response) => {
   repositories.splice(request.repositoryIndex, 1);
-  return response.status(200).json({success: true})
+  return response.status(204).json({success: true})
 });
 
 app.post("/repositories/:id/like", (request, response) => {
