@@ -1,4 +1,5 @@
 const express = require("express");
+const { validate: validateUuid } = require("uuid");
 const app = express();
 
 addRepositoryToRequest = (repositories) => {
@@ -17,6 +18,19 @@ addRepositoryToRequest = (repositories) => {
   });
 }
 
+validateRepositoriesUuid = () => {
+  return app.use("/repositories/:id", (request, response, next) => {
+    const { id } = request.params;
+    if (!validateUuid(id)){
+      return response.status(400).json({error: `The specified value is not a valid UUID. Value: '${id}'.`})
+    }
+    return next();
+  });
+}
+
 module.exports = (repositories) => {
-  return addRepositoryToRequest(repositories)
+  return [
+    validateRepositoriesUuid(),
+    addRepositoryToRequest(repositories),
+  ]
 }
